@@ -26,6 +26,11 @@
             font-size: 24px;
             color: #333;
         }
+        .no {
+            color: red;
+            font-size: 100px;
+            font-weight: bold;
+        }
         #time {
             font-size: 20px;
             margin-top: 10px;
@@ -36,23 +41,33 @@
 <body>
 
 <div class="countdown">
-    <h1>It's been</h1>
-    <div id="time">0 days, 0 hours, 0 minutes, 0 seconds</div>
-    <h1>since Torchy's Rockville said it would open.</h1>
+    <div class="no">NO</div>
+    <h1 id="message">It's been</h1>
+    <div id="time">0 days, 0 hours, 0 minutes, and 0 seconds</div>
 </div>
 
 <script>
     function updateCountdown() {
-        const openingDate = new Date('September 13, 2024 00:00:00').getTime();
+        const openingDate = new Date('October 1, 2024 00:00:00').getTime();
         const now = new Date().getTime();
-        const timeDifference = now - openingDate;
+        const timeDifference = openingDate - now;
 
-        const seconds = Math.floor((timeDifference / 1000) % 60);
-        const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-        const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const seconds = Math.abs(Math.floor((timeDifference / 1000) % 60));
+        const minutes = Math.abs(Math.floor((timeDifference / (1000 * 60)) % 60));
+        const hours = Math.abs(Math.floor((timeDifference / (1000 * 60 * 60)) % 24));
+        const days = Math.abs(Math.floor(timeDifference / (1000 * 60 * 60 * 24)));
 
-        document.getElementById('time').innerHTML = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+        const messageElement = document.getElementById('message');
+
+        if (timeDifference > 0) {
+            // If the opening date is in the future
+            messageElement.innerHTML = "It's";
+            document.getElementById('time').innerHTML = `${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds<br> <h1>until Torchy's Rockville <a href=https://x.com/JustinB90072145/status/1833224705182208362>said</a> it would open.</h1>`;
+        } else {
+            // If the opening date is in the past
+            messageElement.innerHTML = "It's been";
+            document.getElementById('time').innerHTML = `${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds<br> <h1>since Torchy's Rockville <a href=https://x.com/JustinB90072145/status/1833224705182208362>said</a> it would open.</h1>`;
+        }
     }
 
     setInterval(updateCountdown, 1000);
