@@ -26,10 +26,15 @@
             font-size: 24px;
             color: #333;
         }
-        .no {
-            color: red;
+        .status {
             font-size: 100px;
             font-weight: bold;
+        }
+        .no {
+            color: red;
+        }
+        .yes {
+            color: green;
         }
         #time {
             font-size: 20px;
@@ -41,18 +46,19 @@
 <body>
 
 <div class="countdown">
-    <div class="no">NO</div>
+    <div id="status" class="status no">NO</div>
     <h1 id="message">It's been</h1>
-    <div id="time">0 days, 0 hours, 0 minutes, and 0 seconds</div>
+    <div id="time">0 days, 0 hours, 0 minutes, 0 seconds</div>
+    <h1 id="closing-message">since Torchy's Rockville said it would open.</h1>
 </div>
 
 <script>
     function updateCountdown() {
-        const openingDate = new Date('October 1, 2024 00:00:00').getTime();
+        const openingDate = new Date('October 2, 2024 10:00:00').getTime();
         const now = new Date().getTime();
         let timeDifference = now - openingDate;
 
-        // If the date is in the future, switch to countdown mode
+        // Determine if we are before or after the opening time
         let isPast = true;
         if (timeDifference < 0) {
             isPast = false;
@@ -64,16 +70,24 @@
         const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
+        const statusElement = document.getElementById('status');
         const messageElement = document.getElementById('message');
+        const closingMessageElement = document.getElementById('closing-message');
 
         if (isPast) {
-            // Time since opening date
+            // Torchy's has already opened
+            statusElement.innerHTML = "YES";
+            statusElement.className = "status yes";
             messageElement.innerHTML = "It's been";
-            document.getElementById('time').innerHTML = `${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds <br><h1>since Torchy's Rockville <a href=https://x.com/JustinB90072145/status/1833224705182208362>said</a> it would open.`;
+            document.getElementById('time').innerHTML = `${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
+            closingMessageElement.innerHTML = "since Torchy's Rockville opened.";
         } else {
-            // Countdown to the opening date
+            // Torchy's is still going to open
+            statusElement.innerHTML = "NO";
+            statusElement.className = "status no";
             messageElement.innerHTML = "It's";
-            document.getElementById('time').innerHTML = `${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds <br><h1>until Torchy's Rockville <a href=https://x.com/JustinB90072145/status/1833224705182208362>said</a> it would open.`;
+            document.getElementById('time').innerHTML = `${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
+            closingMessageElement.innerHTML = "until Torchy's Rockville is opening.";
         }
     }
 
